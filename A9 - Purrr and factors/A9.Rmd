@@ -1,0 +1,102 @@
+---
+title: "Purrr and factors"
+output:
+  pdf_document: default
+  html_notebook: default
+author:
+  - Bryana Benson
+  - Conner Bryan
+---
+
+###Libraries
+```{r message=FALSE, warning=FALSE}
+library("readxl")
+library("purrr")
+library("tibble")
+library("tidyverse")
+library("dplyr")
+```
+
+###Combining multiple spreadsheets in a workbook
+
+Download the spreadsheet https://www.census.gov/retail/mrts/www/mrtssales92-present.xls. Combine the Agjusted Range of each spreadsheet in the excel workbook to a single dataframe.
+```{r}
+#Excel spreadsheet in Project Directory
+path <- "mrtssales92-present.xls"
+
+#Combine data in each worksheet in excel workbook using the specified range
+data <- path %>%
+  excel_sheets() %>%
+  set_names() %>% 
+  map_df(~ read_excel(path = path, sheet = .x, range = "A72:N110"), .id = "sheet")
+
+#Convert to tibble
+as_tibble(data)
+```
+
+###Normalizing data
+
+Select the columns that include Year, Code, Kind of Business, and Months. Assign names to columns.
+```{r}
+#Select columns
+data <- data[,c(3,1,4:15)]
+
+#Add names to columns
+names(data)[1:14] <- c("Business","Year", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+#Preview data
+head(data)
+```
+
+
+Gather data and make 'Month' a factor.
+```{r}
+#Gather data: Each month column becomes a single column called 'Month' and the values associated are recorded in the 'Sale' column.
+data.g<- gather(data,'Month','Sale',3:14)
+```
+
+Make Month a factor and specify levels.
+```{r}
+#Check data types
+str(data.g)
+
+#Specify levels and Make Month a factor
+levels <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+data.g$Month <- factor(data.g$Month, levels)
+
+#Check data types again
+str(data.g)
+
+#Preview 20 rows of data
+head(data.g, n = 20)
+```
+
+
+###Calculations
+
+Compute average "Retail and food services sales, total" for each month.
+```{r}
+data.g %>% 
+  filter(str_detect(Business, "Retail and food services")) %>% 
+  group_by(Month) %>% 
+  summarize("Average Sales" = mean(Sale))
+```
+
+Get rid of null values in the dataset that is causing
+```{r}
+#omit NAs
+data.g <- na.omit(data.g)
+```
+
+```{r}
+#Rerun the previous code
+data.g %>% 
+  filter(str_detect(Business, "Retail and food services")) %>% 
+  group_by(Month) %>% 
+  summarize("Average Sales" = mean(Sale))
+```
+
+
+
+

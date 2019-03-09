@@ -1,0 +1,88 @@
+---
+title: "String Handling - Part 2"
+author:
+- Bryana Benson
+- Conner Bryan
+output:
+  pdf_document: default
+  html_notebook: default
+---
+###Data Import and Packages
+```{r message=FALSE, warning=FALSE}
+library("readr")
+library("stringr")
+library("dplyr")
+library("knitr")
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+url<- 'http://richardtwatson.com/data/chicago.csv'
+data<-read_csv(url)
+head(data)
+```
+###Clean the file
+
+```{r}
+typeof(data$name)
+typeof(data$position_title)
+typeof(data$department)
+typeof(data$employee_annual_salary)
+```
+In our dataset, name, position_title, and department should be a character string. employee_annual_salary should be an integar type.
+
+```{r}
+#remove $ sign from employee_annual_salary
+data$employee_annual_salary <- substring(data$employee_annual_salary,2) #start string from 2nd character
+```
+
+```{r}
+#change to numeric data type
+data$employee_annual_salary <- as.numeric(data$employee_annual_salary)
+str(data$employee_annual_salary)
+head(data)
+```
+```{r}
+str(data$department) # character strings repeat 
+# convert to factor
+data$department <- as.factor(data$department)
+str(data$department) #Now a factor consisting of 35 department levels
+```
+
+
+```{r}
+str(data$position_title)
+data$position_title <- as.factor(data$position_title)
+str(data$position_title) #Now there are 1093 different position levels
+```
+
+###Change name, position title, and department to title case
+
+```{r}
+data$name <- str_to_title(data$name)
+data$position_title <- str_to_title(data$position_title)
+data$department <- str_to_title(data$department)
+```
+
+
+###Compute median salary by department 
+
+```{r}
+med_dep_salary <- data %>% group_by(data$department) %>% summarize(median(employee_annual_salary))
+names(med_dep_salary)[1] <- "Department"
+names(med_dep_salary)[2] <- "Median Salary"
+med_dep_salary
+```
+
+###Use kable to format a report, with a comma for thousands and zero decimal places
+```{r}
+med_dep_salary$`Median Salary`<- round(med_dep_salary$`Median Salary`,0)
+med_dep_salary$`Median Salary` <- prettyNum(med_dep_salary$`Median Salary`,big.mark=",",scientific=FALSE)
+str(med_dep_salary$`Median Salary`)
+```
+
+```{r}
+kable(med_dep_salary,col.names = c("Department", "Median Salary"))
+```
+

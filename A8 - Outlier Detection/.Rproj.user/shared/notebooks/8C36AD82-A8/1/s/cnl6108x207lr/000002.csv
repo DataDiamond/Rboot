@@ -1,0 +1,4 @@
+"0","ggplot(data = data, aes(Average)) + "
+"0","  geom_histogram(fill = ""light pink"")  + "
+"0","  xlab(""Average"") + "
+"0","  ylab(""Count"")"

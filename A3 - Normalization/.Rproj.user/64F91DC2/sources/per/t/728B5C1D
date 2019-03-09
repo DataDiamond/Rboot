@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1547749257883.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "235583010",
+    "id" : "728B5C1D",
+    "lastKnownWriteTime" : 1548784728,
+    "last_content_update" : 1548983329722,
+    "path" : "C:/Users/bbens/OneDrive - University of Georgia/Spring/Advanced Data Analytics/Assignments/Normalization/A3.Rmd",
+    "project_path" : "A3.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "51,0",
+        "scrollLine" : "31",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

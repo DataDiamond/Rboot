@@ -1,0 +1,19 @@
+---
+title: "Installing LaTeX (tinytex)"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+Install package called tinytex.
+
+```{r}
+install.packages("tinytex")
+```
+
+You may get a comment in the console to install additional software. If so, follow the link to the download.
+
+LaTeX wil allow you to "knit" document to PDF.
+
+
+

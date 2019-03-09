@@ -1,0 +1,2 @@
+"0","ggplot(data,aes(factor(0),Residuals)) +"
+"0","  geom_boxplot(outlier.colour='red') + xlab("""") + ylab(""Residuals"") #plotting residuals"

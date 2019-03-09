@@ -1,0 +1,73 @@
+---
+title: "Data Manipulation - Assignment 4"
+author:
+- Bryana Benson
+- Conner Bryan
+date: "1/31/2019"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+
+
+###Libraries and Data
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(DBI)
+library(tibble)
+library(RMySQL)
+library(readr)
+library(dplyr)
+#install.packages("scales")
+library(scales) #for the percent() function
+library(knitr) #for kable function
+```
+
+#Connect to Classic Models database
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+conn<- dbConnect(RMySQL::MySQL(), 'richardtwatson.com', dbname="ClassicModels", user="student", password="student")
+
+```
+
+###Pulling in database tables as data frames 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+Customers<-dbReadTable(conn, "Customers")
+Payments<-dbReadTable(conn, "Payments")
+```
+
+###Calculating total payments of all customers
+```{r echo=TRUE}
+tot_payment<-sum(Payments$amount)
+```
+
+###Creating a new data frame for customer payments
+```{r echo=TRUE}
+groupPayments<- Payments%>%
+  group_by(customerNumber)%>%
+  summarize(totalCustPayment = sum(amount))%>%
+  mutate(percOfTotal = percent(totalCustPayment/tot_payment)) %>%
+  mutate(rank = 99-row_number(totalCustPayment))%>%
+  arrange(desc(totalCustPayment))
+```
+
+
+###Assign categories based on rank
+```{r echo=TRUE}
+groupPayments$category = case_when(
+  groupPayments$rank <= (.20*nrow(groupPayments)) ~ "A",
+  groupPayments$rank <= (.50*nrow(groupPayments)) & groupPayments$rank > (.20*nrow(groupPayments)) ~ "B",
+  groupPayments$rank > (.50*nrow(groupPayments)) ~ "C"
+)
+```
+
+###Joining the Customer and groupPayments tables
+```{r echo=TRUE}
+ABC<-select(inner_join(groupPayments, Customers), customerName, totalCustPayment, percOfTotal, category)
+```
+
+###Creating and printing the final table of results
+```{r}
+finalTable <- kable(ABC, row.names = FALSE, caption="ABC Analysis of Customers", col.names = c("Customer name", "Payments", "Percent", "Category") , align="lrrc")
+finalTable
+```

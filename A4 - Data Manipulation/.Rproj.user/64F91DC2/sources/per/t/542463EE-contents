@@ -1,0 +1,97 @@
+---
+title: "File Handling"
+author:
+- "Bryana Benson"
+date: "January 10, 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1 Connecting CSV
+```{r message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+```
+
+#### URL
+```{r message=FALSE, warning=FALSE}
+url <- 'http://people.terry.uga.edu/rwatson/data/electricityprices.csv'
+
+EP <- read_csv(url)
+
+head(EP)
+```
+
+## 2 Database Access
+
+```{r message=FALSE, warning=FALSE}
+library("DBI")
+library("RMySQL")
+library("tibble")
+```
+
+####Connecting to MySQL Database
+```{r}
+conn <- dbConnect(RMySQL::MySQL(), "richardtwatson.com", dbname="ClassicModels", user="student", password="student")
+```
+
+####List Tables
+```{r}
+dbListTables(conn)
+```
+
+
+####Querying from MySQL Database
+```{r}
+c <- dbGetQuery(conn,"SELECT * FROM Orders;")
+head(c)
+```
+
+## 3 Read Feather Datset
+
+```{r}
+library("feather")
+```
+
+
+```{r}
+featherfile<-feather('C:/Users/bbens/OneDrive - University of Georgia/Spring/Advanced Data Analytics/Assignments/File Handling/radiation10.feather')
+
+head(featherfile)
+```
+
+## 4 Import Dataset
+
+Use RStudio's 'Import Dataset' feature to import the dataset InternetCompanies.xlsx
+ 
+ 1. Click 'Import Dataset' from Environment tab
+ 
+ 2. Select 'From Excel'
+ 
+ 3. Select 'Browse' and find file
+ 
+ 4. Click 'Import'
+ 
+This feature generates the following code:
+```{r message=FALSE, warning=FALSE}
+library(readxl)
+InternetCompanies <- read_excel("InternetCompanies.xlsx")
+View(InternetCompanies)
+```
+
+
+##Compiling a Report
+
+Compiling a report is useful for future use. Output file can be in the following document types:
+
+output: pdf_document
+
+output: html_document
+
+output: word_document
+
+Note: Download the full MiKTeX software to enable to the pdf_document Markdown capability.
+

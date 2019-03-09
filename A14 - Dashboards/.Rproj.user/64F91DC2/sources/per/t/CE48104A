@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551814337788.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3446429500",
+    "id" : "CE48104A",
+    "lastKnownWriteTime" : 1551816898,
+    "last_content_update" : 1551816898190,
+    "path" : "C:/Users/bbens/OneDrive - University of Georgia/Spring/Advanced Data Analytics/Assignments/Dashboards - A14/A14.R",
+    "project_path" : "A14.R",
+    "properties" : {
+        "cursorPosition" : "30,23",
+        "scrollLine" : "22",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : true,
+    "source_window" : "",
+    "type" : "r_source"
+}

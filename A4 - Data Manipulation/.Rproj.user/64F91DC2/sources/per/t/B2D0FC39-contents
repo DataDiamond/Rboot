@@ -1,0 +1,53 @@
+---
+title: "Normalization"
+author:
+- Bryana Benson
+- Conner Bryan
+date: "1/22/2019"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+
+###Libraries and Data
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("readr")
+library("tibble")
+library("tidyr")
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+co2 <- read_csv("co2.csv")
+head(co2)
+```
+Above is the data preview.
+
+###Covert to tibble
+```{r echo=TRUE}
+as_tibble(co2)
+```
+
+###Changing Column Names
+```{r echo=TRUE}
+colnames(co2)<- c('year', 1:12)
+head(co2)
+```
+
+We change the column names from the Month Name (Jan, Feb, Mar...) to Month Number.
+
+###Using the 'Gather' function
+```{r echo=TRUE}
+g.co2<- gather(co2, 'month', 'value', 2:13)
+head(g.co2)
+```
+
+The goal of the gather function is for each instance to include Year, Month, and Value in each row.
+
+###Writing to CSV
+```{r}
+write.csv(g.co2, file="CO2_gathered.csv")
+```
+
+
+

@@ -1,0 +1,56 @@
+---
+title: "Assignment 10"
+output:
+  pdf_document: default
+  html_notebook: default
+author:
+  - Bryana Benson
+  - Conner Bryan
+---
+
+###Libraries
+```{r message=FALSE, warning=FALSE}
+library(readr)
+library(stringr)
+library(ggplot2)
+library(dplyr)
+#install.packages("googleVis")
+library(googleVis)
+```
+
+###
+```{r warning=FALSE}
+#Excel spreadsheet in Project Directory
+data<-read_csv("http://www.richardtwatson.com/data/InternetCompanies.csv")
+
+# Clean data
+data$Cash<-as.numeric(gsub("\\$", "", data$Cash))
+data$MarketCap<-as.numeric(gsub("\\$", "", data$MarketCap))
+data$Revenue<-as.numeric(gsub("\\$", "", data$Revenue))
+
+data$Cash[data$Cash == "-"]<- NA
+data$Revenue[data$Revenue == "-"]<- NA
+```
+
+###Top 5 by Market Cap Graph
+
+Use ggplot2 to create a point graph of market capitalization versus revenue for the five largest companies by market capitialization and label each point with the company's name.
+```{r warning=FALSE}
+# Use ggplot2 to create a point graph of market capitalization
+# versus revenue for the five largest companies by market capitialization
+# and label each point with the company's name.
+Top5 <- data %>%
+  arrange(desc(MarketCap)) %>%
+  filter(row_number()<6)
+  
+ggplot(Top5, aes(MarketCap,Revenue)) + geom_point(color='red') + 
+  geom_text(aes(label=Company),hjust=-.1, vjust=-.5)
+```
+
+Use googleVis to create a bubble chart for the same set of companies.
+```{r warning=FALSE}
+Bubble<-gvisBubbleChart(Top5, xvar="Revenue", yvar="MarketCap", sizevar = "MarketCap",
+                        colorvar = "Revenue")
+plot(Bubble)
+
+```

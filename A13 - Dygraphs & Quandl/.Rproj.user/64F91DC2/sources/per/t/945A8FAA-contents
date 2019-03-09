@@ -1,0 +1,37 @@
+---
+title: "Dygraphs & Quandl"
+author:
+- Bryana Benson
+- Conner Bryan
+output:
+  html_document:
+    df_print: paged
+---
+### Libraries
+```{r message=FALSE, warning=FALSE}
+library(dygraphs)
+library(Quandl)
+library(xts)
+```
+
+###Using Dygraph
+Use OECD stats to plot US healthcare and education costs as a percentage of GDP on the same graph.
+
+Use dygraphs with appropriate labeling.
+
+Get the data in xts format from from Quandl using the Quandl package
+
+Provide a pdf of the html knit.
+```{r message=FALSE, warning=FALSE}
+#import data
+edu <- Quandl("OECD/NAAG_USA_TLYCG090GS13S", type = "xts")
+health <- Quandl("OECD/NAAG_USA_TLYCG070GS13S", type = "xts")
+
+graph <- cbind(edu, health)
+
+dygraph(graph) %>% 
+  dySeries("edu", label = "Education as a % of GDP") %>%
+  dySeries("health", label = "Health as a % of GDP") %>%
+  dyOptions(stackedGraph = TRUE)
+```
+

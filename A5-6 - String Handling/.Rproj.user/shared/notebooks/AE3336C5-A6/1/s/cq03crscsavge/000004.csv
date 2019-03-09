@@ -1,0 +1,2 @@
+"0","#remove $ sign from employee_annual_salary"
+"0","data$employee_annual_salary <- substring(data$employee_annual_salary,2) #start string from 2nd character"

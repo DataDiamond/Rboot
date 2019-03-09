@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549566365377.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4206590917",
+    "id" : "D5AA74E0",
+    "lastKnownWriteTime" : 1549569679,
+    "last_content_update" : 1549569679690,
+    "path" : "C:/Users/bbens/OneDrive - University of Georgia/Spring/Advanced Data Analytics/Assignments/Outliers/A8.Rmd",
+    "project_path" : "A8.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "8,14",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

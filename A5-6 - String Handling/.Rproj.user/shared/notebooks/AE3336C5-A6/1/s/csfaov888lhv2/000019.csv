@@ -1,0 +1,4 @@
+"0","med_dep_salary <- data %>% group_by(data$department) %>% summarize(median(employee_annual_salary))"
+"0","names(med_dep_salary)[1] <- ""Department"""
+"0","names(med_dep_salary)[2] <- ""Median Salary"""
+"0","med_dep_salary"

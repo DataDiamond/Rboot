@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551207762722.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1778597730",
+    "id" : "6B0350EF",
+    "lastKnownWriteTime" : 1551381409,
+    "last_content_update" : 1551381409860,
+    "path" : "C:/Users/bbens/OneDrive - University of Georgia/Spring/Advanced Data Analytics/Assignments/Visualization - A12/A12.Rmd",
+    "project_path" : "A12.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "61,0",
+        "scrollLine" : "56",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

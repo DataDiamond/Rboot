@@ -1,0 +1,8 @@
+"0","med_dep_salary$`Median Salary`<- round(med_dep_salary$`Median Salary`,0)"
+"0","med_dep_salary$`Median Salary` <- prettyNum(med_dep_salary$`Median Salary`,big.mark="","",scientific=FALSE)"
+"0","str(med_dep_salary$`Median Salary`)"
+"1"," chr [1:35] "
+"1","""68,028"" ""56,928"" ""72,862"" ""48,036"" ""81,948"" ""89,340"" ""97,920"" ""75,960"" ""62,004"" ""52,950"""
+"1"," ..."
+"1","
+"

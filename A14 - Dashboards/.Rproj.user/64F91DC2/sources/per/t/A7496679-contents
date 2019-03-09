@@ -1,0 +1,95 @@
+---
+title: "Data Manipulation"
+output:
+  pdf_document: default
+  html_notebook: default
+authors:
+- Bryana Benson
+- Conner Bryan
+---
+
+###Packages and Connections
+```{r message=TRUE, warning=FALSE}
+library("dplyr")
+library("RMySQL")
+library("readr")
+```
+
+```{r}
+conn <- dbConnect(RMySQL::MySQL(), "richardtwatson.com", dbname="ClassicModels", user="student", password="student")
+```
+
+```{r message=FALSE, warning=FALSE}
+dbReadTable(conn,"Customers")
+dbReadTable(conn,"Payments")
+```
+
+
+
+
+###Using dplyr: Function Purpose
+
+filter() Select rows 
+
+select() Select columns
+
+arrange() Sort rows
+
+summarize() Compute a single summary statistic
+
+group_by() Pair with summarize() to analyze groups within a dataset
+
+inner_join() Join two tables
+
+mutate() Create a new column
+
+distinct() Select distinct rows
+
+sample_n() & sample_frac Select a random sample by number or fraction
+
+
+CTRL + SHIFT + M to add pipe symbol.
+
+
+Show for each customer their total payments as a dollar value and as a percentage of total payments from all customers
+```{r}
+payments <- dbGetQuery(conn, "SELECT customerNumber, amount FROM Payments;")
+head(payments)
+```
+
+```{r}
+#Group payments by CustomerNumber
+g.payments<- payments %>% 
+  group_by(customerNumber) %>% 
+  summarise(sum(amount))
+
+colnames(g.payments)<- c("Customer","Total")
+head(g.payments)
+```
+
+```{r}
+#Create a new column for percent of total customer payment
+g.payments$PerctTotal<-g.payments$Total/sum(g.payments$Total)
+
+#Arrange PerctTotal column in descending order
+g.payments<-arrange(g.payments,desc(PerctTotal))
+
+#Preview data
+head(g.payments)
+```
+
+
+
+Classify the top 20% of customers as A, the next 30% as B, and the remainder as C. 
+```{r}
+ABC<- g.payments
+#show row number
+row_number(ABC$Customer)
+tibble(ABC)
+g.payments
+row_number/nrow(g.payments)
+
+head(g.payments)
+
+```
+

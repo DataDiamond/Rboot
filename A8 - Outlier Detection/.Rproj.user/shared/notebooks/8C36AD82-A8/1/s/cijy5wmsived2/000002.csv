@@ -1,0 +1,12 @@
+"0","```r
+#Conducting a Shapiro-Wilk test for normality
+#A small p-value indicates a low probability that data is normally distributed
+shapiro.test(data$Average)
+
+```"
+"1","
+	Shapiro-Wilk normality test
+
+data:  data$Average
+W = 0.55016, p-value = 2.782e-12
+"

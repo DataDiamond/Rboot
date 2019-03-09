@@ -1,0 +1,3 @@
+"0","#Calculating how far Bradman is from ""average"""
+"0","avg_Average<-mean(data$Residuals) #the average of all residuals"
+"0","data[1,6] - (avg_Average + (3*sd(data$Residuals)))"

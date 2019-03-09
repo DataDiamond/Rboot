@@ -1,0 +1,52 @@
+---
+title: "Normalization Notes"
+output: html_notebook
+---
+
+##Normalizing a Spreadsheet
+```{r}
+library(readr)
+library(tidyr)
+```
+
+####URL
+```{r}
+url<- 'http://people.terry.uga.edu/rwatson/data/gatherExample.csv'
+t <- read_csv(url)
+t
+```
+
+```{r}
+colnames(t)<- c('year', 1:4)
+t
+```
+
+### Using the 'gather' function
+```{r}
+g<- gather(t, 'quarter', 'value', 2:5)
+g
+```
+
+```{r}
+g$quarter <- as.integer((g$quarter))
+g
+```
+
+
+### Using the 'spread' function
+```{r}
+s<- spread(g, quarter, value)
+s
+```
+
+```{r}
+colnames(s) <- c('year' , 'Q1' , 'Q2' , 'Q3', 'Q4')
+s
+```
+
+
+### Writing to CSV
+```{r}
+write.csv(g, file="CO2_gathered.csv")
+```
+

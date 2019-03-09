@@ -1,0 +1,57 @@
+library(readr)
+library(ggplot2)
+library(dplyr)
+
+cricket<-read_csv("http://richardtwatson.com/data/cricket.csv")
+
+########################################################
+###Running initial visualization and analysis
+
+#Creating a boxplot of Average Scores
+ggplot(cricket,aes(factor(0),Average)) +
+  geom_boxplot(outlier.colour='red') + xlab("") + ylab("Average")
+
+#Creating a boxplot of Average Scores by country
+ggplot(cricket,aes(factor(Country),Average)) +
+  geom_boxplot(outlier.colour='red') + xlab("") + ylab("Average")
+
+#Creating a histogram of Average Scores
+ggplot(cricket,aes(Average)) +
+  geom_histogram(fill='light blue') +
+  xlab('Average') +
+  ylab('Count')
+
+#Conducting a Shapiro-Wilk test for normality
+#A small p-value indicates a low probability that data is normally distributed
+shapiro.test(cricket$Average)
+
+#Using Residual analysis for testing outlier status
+lmAverage<-lm(Average ~ Country, data=cricket)
+cricket$Predictions <- predict(lmAverage, newdata=cricket)
+cricket$Residuals <- cricket$Average - cricket$Predictions
+shapiro.test(cricket$Residuals)
+
+#########################################################
+###Using manipulated data for testing/visualizing
+noBradman <- filter(cricket, Batsman != "Bradman, D G")
+
+shapiro.test(noBradman$Average) #running test without Bradman gives less certainty
+
+shapiro.test(noBradman$Residuals) #running residual test without Bradman
+
+ggplot(cricket,aes(factor(0),Residuals)) +
+  geom_boxplot(outlier.colour='red') + xlab("") + ylab("Residuals") #plotting residuals
+
+#Calculating how far Bradman is from "average"
+avg_Average<-mean(cricket$Residuals) #the average of all residuals
+cricket[1,6] - (avg_Average + (3*sd(cricket$Residuals)))
+#the difference between Bradman's residual and 3 deviations above the mean
+
+########################################################
+###CONCLUSIONS
+print("Bradman is an outlier. A quick boxplot seems to confirm this fact. Even when
+      segmenting out results by country, Bradman appears as an outlier in Australia.
+      When Bradman is removed from the sample, it conforms more closely to a normal
+      distribution. Even an analysis of the residuals with Country as the explanatory
+      variable reveals that Bradman is far removed from any sort of standard 
+      deviation of the group.")

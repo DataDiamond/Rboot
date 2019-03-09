@@ -1,0 +1,110 @@
+---
+title: "Outliers"
+output:
+  pdf_document: default
+  html_notebook: default
+  
+author: 
+- Bryana Benson
+- Conner Bryan
+---
+
+```{r message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r message=FALSE, warning=FALSE}
+data <- read_csv("cricket.csv")
+head(data)
+```
+```{r}
+str(data)
+```
+
+
+### Is Bradman an outlier?
+```{r}
+ggplot(data = data ,aes(factor(0),Average)) +
+  geom_boxplot(outlier.colour='red') + xlab("") + ylab("Average")
+```
+
+```{r}
+ggplot(data = data ,aes(Country,Average)) +
+  geom_boxplot(outlier.colour='red') + xlab("Country") + ylab("Average")
+```
+```{r}
+ggplot(data = data, aes(Average)) + 
+  geom_histogram(fill = "light pink")  + 
+  xlab("Average") + 
+  ylab("Count")
+```
+
+
+
+```{r}
+#Conducting a Shapiro-Wilk test for normality
+#A small p-value indicates a low probability that data is normally distributed
+shapiro.test(data$Average)
+```
+
+The p-value for the Shapiro-Wilk test for Normality is less than .0000. This indicates that the data is NOT normally distributed.
+
+```{r}
+#Using Residual analysis for testing outlier status
+lmAverage<-lm(Average ~ Country, data=data) # linear regression model
+data$Predictions <- predict(lmAverage, newdata=data)
+data$Residuals <- data$Average - data$Predictions
+head(data)
+```
+A linear regression model was created predicting the Average based on Country. Those Average Predictions were stored in the dataset. The residuals were also stored in the dataset.
+
+
+```{r}
+#Test to see if Residuals are normally distributed
+shapiro.test(data$Residuals)
+```
+
+The p-value of the Shapiro-Wilks test is less than .0000 which suggests the residuals are NOT normally distributed and suggests a trend or pattern.
+
+```{r}
+###Using manipulated data for testing/visualizing
+noBradman <- filter(data, Batsman != "Bradman, D G")
+```
+
+Exluded Brandman from the dataset.
+
+```{r}
+shapiro.test(noBradman$Average) #running test without Bradman gives less certainty
+```
+Running the Shapiro-Wilks test without Bradman results in less certainty, but is still statistically significant for normality.
+
+
+```{r}
+shapiro.test(noBradman$Residuals) #running residual test without Bradman
+```
+
+```{r}
+ggplot(data,aes(factor(0),Residuals)) +
+  geom_boxplot(outlier.colour='red') + xlab("") + ylab("Residuals") #plotting residuals
+```
+
+```{r}
+#Calculating how far Bradman is from "average"
+avg_Average<-mean(data$Residuals) #the average of all residuals
+data[1,6] - (avg_Average + (3*sd(data$Residuals)))
+#the difference between Bradman's residual and 3 deviations above the mean
+```
+
+
+###CONCLUSIONS
+
+Bradman is an outlier. A quick boxplot seems to confirm this fact. Even when
+      segmenting out results by country, Bradman appears as an outlier in Australia.
+      When Bradman is removed from the sample, it conforms more closely to a normal
+      distribution. Even an analysis of the residuals with Country as the explanatory
+      variable reveals that Bradman is far removed from any sort of standard 
+      deviation of the group.
+
+

@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1548961887430.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3083567343",
+    "id" : "43CCB103",
+    "lastKnownWriteTime" : 1548982592,
+    "last_content_update" : 1548982592439,
+    "path" : "C:/Users/bbens/OneDrive - University of Georgia/Spring/Advanced Data Analytics/Assignments/String Handling/A6.Rmd",
+    "project_path" : "A6.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "8,0",
+        "scrollLine" : "1",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

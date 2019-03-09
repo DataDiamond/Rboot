@@ -1,0 +1,61 @@
+---
+title: "Vizualization - A12"
+author:
+- Bryana Benson
+- Conner Bryan
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+
+###Libraries
+```{r message=FALSE, warning=FALSE}
+library("DBI")
+library("RMySQL")
+library("ggplot2")
+library("tidyr")
+library("dplyr")
+```
+
+###Connecting to SQL database
+```{r}
+conn <- dbConnect(RMySQL::MySQL(), "richardtwatson.com", dbname="ClassicModels", user="student", password="student")
+```
+
+###Pull SQL query
+
+Extract the frequency with which particular pairs of products occur in the same basket.
+
+```{sql, connection = conn, output.var = "goods"}
+
+SELECT (SELECT productName FROM Products WHERE Products.productCode = OD1.productCode) AS   `Product1`, 
+  (SELECT productName FROM Products WHERE Products.productCode = OD2.productCode) AS `Product2`, 
+count(*) as Frequency
+FROM OrderDetails AS OD1 JOIN OrderDetails AS OD2 ON OD1.orderNumber = OD2.orderNumber 
+WHERE OD1.productCode > OD2.productCode
+GROUP BY `Product1`, `Product2` HAVING Frequency > 10
+ORDER BY Frequency DESC, `Product1`, `Product2`;
+```
+
+```{r}
+#preview data
+head(goods)
+```
+
+
+Create a heat map using geom_tile(). Include code that can facilitate necessary adjustments to make the heat map useful.
+```{r}
+library(ggplot2)
+ggplot(data = goods, aes(x = Product2, y = Product1)) +
+  xlab ("Product 2")+ ylab("Product 1") +
+  geom_tile(aes(fill = Frequency)) +
+  coord_flip() +
+  scale_fill_gradient(low = "light blue", high = "dark blue", name = "Frequency") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+```
+
+
+Limit data to frequencies of over 25.

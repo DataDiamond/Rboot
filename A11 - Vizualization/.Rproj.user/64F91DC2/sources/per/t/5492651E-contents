@@ -1,0 +1,76 @@
+---
+title: "Assignment 11"
+output:
+  pdf_document: default
+  html_notebook: default
+author:
+  - Bryana Benson
+  - Conner Bryan
+---
+
+###Libraries
+```{r message=FALSE, warning=FALSE}
+library(readr)
+library(stringr)
+library(ggplot2)
+library(dplyr)
+library(googleVis)
+```
+
+### Load data and format columns
+```{r warning=FALSE}
+data<-read_csv("http://www.richardtwatson.com/data/LiOnBattery.csv")
+
+data$`Projected cost of Li-On Battery Storage ($/kW)`<-as.numeric(data$`Projected cost of Li-On Battery Storage ($/kW)`)
+colnames(data)[2]<-"projectedBatteryCost"
+```
+
+#### Point Graph of Projected LiOn Battery Cost
+## Use ggplot2 to create point graph showing the projected cost of LiOn batteries.
+```{r warning=FALSE}
+ggplot(data, aes(x=Year,y=projectedBatteryCost)) + geom_point(color='blue') +
+  ylab('$ Battery Cost / kW') + ylim(0,200)
+```
+
+#### Line Graph of Projected Bolt Battery Cost
+## Use ggplot2 to create a line graph showing the projected cost of batteries for a Chevy Bolt
+```{r warning=FALSE}
+# create a column for the cost of Chevy Bolt batteries
+data$futureBoltBatteryCost<-data$projectedBatteryCost*60
+colnames(data)[3] <- "futureBoltBatteryCost"
+
+ggplot(data, aes(x=Year,y=futureBoltBatteryCost)) + geom_point(color='blue') +
+  ylab('$ Battery Cost / kW') + ylim(0,10000)
+```
+
+#### Bar Graph of Projected Bolt Cost
+## Use ggplot2 to create a bar graph for the projected cost of a Chevy Bolt
+```{r warning=FALSE}
+#create a column for the cost of Chevy Bolt
+data$futureBoltCost<-data$futureBoltBatteryCost+27000
+
+ggplot(data, aes(x=Year,y=futureBoltCost)) + 
+  geom_col(fill='light blue', color='blue') +
+  ylab('Chevy Bolt Cost')
+```
+
+#### googleVis line graph
+## Illustrates projected bolt cost and percentage of cost that is battery
+```{r warning=FALSE}
+data$batteryPercentOfCost<-data$futureBoltBatteryCost/data$futureBoltCost
+
+CostPredictions <- gvisLineChart(data, "Year", c("futureBoltCost","batteryPercentOfCost"),
+                                 options=list(title="Projected Bolt Costs",
+                                              series="[{targetAxisIndex:0, 
+                                              color:'red'}, 
+                                              {targetAxisIndex:1,
+                                              color:'blue'}]",
+                                              vAxes="[{title:'Projected Bolt Cost'},
+                                              {title:'Projected Percentage of Cost that is Battery',
+                                              format:'#%'}]",
+                                              hAxes="[{title:'Year',
+                                              format: '####'}]",
+                                              width=700, height=400)
+)
+plot(CostPredictions)
+```

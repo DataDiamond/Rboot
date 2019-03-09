@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1548966003075.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9BC120A5",
+    "lastKnownWriteTime" : 2,
+    "last_content_update" : 1548966003075,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "EB2DB869",
+        "caption" : "med_dep_salary",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=med_dep_salary&cache_key=EB2DB869",
+        "displayedObservations" : 35,
+        "environment" : "",
+        "object" : "med_dep_salary",
+        "preview" : 0,
+        "totalObservations" : 35,
+        "variables" : 2
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

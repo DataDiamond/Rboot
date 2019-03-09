@@ -1,0 +1,2 @@
+"0","ggplot(data = data ,aes(Country,Average)) +"
+"0","  geom_boxplot(outlier.colour='red') + xlab(""Country"") + ylab(""Average"")"

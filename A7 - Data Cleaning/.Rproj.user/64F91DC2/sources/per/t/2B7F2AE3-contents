@@ -1,0 +1,64 @@
+---
+title: "Data Cleaning - Assignment 7"
+author:
+- Bryana Benson
+- Conner Bryan
+date: "2/5/2019"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+
+###Libraries and Data
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(readr)
+library(stringr)
+library(dplyr)
+library(janitor)
+library(stringr)
+library(knitr)
+```
+
+###Read the data file
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+data_clean<-read.csv("cleaning.csv")
+```
+Above is the data preview.
+
+###Clean the file - convert to numeric and normalize city names
+```{r echo=TRUE}
+data_clean$Zip <- str_replace(data_clean$Zip, "631o8", "63108")
+
+data_clean$Income<-as.numeric(data_clean$Income)
+
+data_clean$City<-case_when(
+  data_clean$Zip == "63108" ~ "Kirkwood",
+  data_clean$Zip == "63122" ~ "Kirkwood",
+  data_clean$Zip == "63123" ~ "Kirkwood",
+  data_clean$Zip == "63125" ~ "Kirkwood",
+  data_clean$Zip == "63126" ~ "Kirkwood",
+  data_clean$Zip == "63127" ~ "Kirkwood",
+  data_clean$Zip == "63128" ~ "Kirkwood",
+  data_clean$Zip == "63131" ~ "Kirkwood",
+  data_clean$Zip == "63108" ~ "Saint Louis",
+  data_clean$Zip == "63110" ~ "Saint Louis",
+  data_clean$Zip == "63124" ~ "U City",
+  data_clean$Zip == "63130" ~ "U City",
+  data_clean$Zip == TRUE ~ 'NA'
+)
+```
+
+###Filter out NAs and calculate average income by city
+```{r echo=TRUE}
+filteredData <- filter(data_clean, City!= 'NA')
+
+meanIncome<-filteredData%>%
+  group_by(City)%>%
+  summarize(mean=round(mean(Income, na.rm=TRUE),0))
+```
+
+###Creating a well formatted table
+```{r echo=TRUE}
+kable(meanIncome, col.names=c("City", "Mean Salary"))
+```

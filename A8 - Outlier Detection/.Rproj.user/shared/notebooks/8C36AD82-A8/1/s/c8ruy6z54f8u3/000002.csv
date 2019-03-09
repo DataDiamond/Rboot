@@ -1,0 +1,17 @@
+"0","```r
+str(data)
+
+```"
+"1","Classes â€˜spec_tbl_dfâ€™, â€˜tbl_dfâ€™, â€˜tblâ€™ and 'data.frame':	60 obs. of  4 variables:
+ $ Batsman: chr  \"Bradman, D G\" \"Smith, S P D*\" \"Sutcliffe, H\" \"Barrington, K F\" ...
+ $ Country: chr  \"Australia\" \"Australia\" \"England\" \"England\" ...
+ $ Period : chr  \"1928-1948\" \"2010-\" \"1924-1935\" \"1955-1968\" ...
+ $ Average: num  99.9 61.4 60.7 58.7 58.6 ...
+ - attr(*, \"spec\")=
+  .. cols(
+  ..   Batsman = [31mcol_character()[39m,
+  ..   Country = [31mcol_character()[39m,
+  ..   Period = [31mcol_character()[39m,
+  ..   Average = [32mcol_double()[39m
+  .. )
+"

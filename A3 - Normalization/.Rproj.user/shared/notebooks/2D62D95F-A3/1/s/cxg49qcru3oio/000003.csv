@@ -1,0 +1,2 @@
+"0","g.co2<- gather(co2, 'month', 'value', 2:13)"
+"0","head(g.co2)"

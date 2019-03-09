@@ -1,0 +1,9 @@
+"0","```r
+#Group payments by CustomerNumber
+g.payments<- payments %>% 
+  group_by(customerNumber) %>% 
+  summarise(sum(amount))
+
+colnames(g.payments)<- c(\"Customer\",\"Total\")
+head(g.payments)
+```"

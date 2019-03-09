@@ -1,0 +1,81 @@
+---
+title: "Dates and Times"
+output: pdf_document
+author: 
+  - "Bryana Benson"
+  - "Conner Bryan"
+date: 1/15/2019
+---
+
+###Reading in CSV for Central Park Temps
+```{r message=FALSE, warning=FALSE}
+library("readr")
+prices <- read_csv("http://richardtwatson.com/data/electricityprices.csv")
+```
+
+```{r}
+head(prices)
+```
+
+###Create a random subset of 10 rows using the code shown below.
+
+```{r message=FALSE, warning=FALSE}
+library("dplyr")
+```
+
+Generate a random sample of 10 row from the table temps.
+```{r}
+sampleprices <- sample_n(prices, 10)
+```
+
+###Manipulating Dates and Times
+
+```{r message=FALSE, warning=FALSE}
+library("lubridate")
+```
+
+
+#####Year
+```{r Year}
+sampleprices$year <- year(sampleprices$timestamp)
+```
+
+#####Month
+```{r}
+sampleprices$month <- month(sampleprices$timestamp)
+```
+
+#####Day in month
+```{r}
+sampleprices$days_in_month <- days_in_month(sampleprices$timestamp)
+```
+
+#####Day in week as a number
+```{r message=FALSE, warning=FALSE}
+sampleprices$wday <- wday(sampleprices$timestamp)
+```
+
+#####Day in week as a string
+```{r}
+sampleprices$weekdays <- weekdays(sampleprices$timestamp)
+```
+
+#####Hour
+```{r}
+sampleprices$hour <- hour(sampleprices$timestamp)
+```
+
+#####Which years are leap years
+```{r}
+sampleprices$leap_year <- leap_year(sampleprices$timestamp)
+```
+
+#####Sample Prices Dataset showing conversions
+```{r}
+sampleprices
+```
+
+```{r}
+sampleprices[,c(1,9)]
+```
+

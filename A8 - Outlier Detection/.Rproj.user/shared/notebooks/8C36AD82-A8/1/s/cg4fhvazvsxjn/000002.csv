@@ -1,0 +1,5 @@
+"0","#Using Residual analysis for testing outlier status"
+"0","lmAverage<-lm(Average ~ Country, data=data) # linear regression model"
+"0","data$Predictions <- predict(lmAverage, newdata=data)"
+"0","data$Residuals <- data$Average - data$Predictions"
+"0","head(data)"

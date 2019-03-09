@@ -1,0 +1,8 @@
+"0","library(ggplot2)"
+"0","ggplot(data = goods, aes(x = Product2, y = Product1)) +"
+"0","  xlab (""Product 2"")+ ylab(""Product 1"") +"
+"0","  geom_tile(aes(fill = Frequency)) +"
+"0","  coord_flip() +"
+"0","  scale_fill_gradient(low = ""light blue"", high = ""dark blue"", name = ""Frequency"") +"
+"0","  theme_minimal() +"
+"0","  theme(axis.text.x = element_text(angle = 60, hjust = 1)) "

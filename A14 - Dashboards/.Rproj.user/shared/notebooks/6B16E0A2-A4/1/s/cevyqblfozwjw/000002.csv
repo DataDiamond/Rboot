@@ -1,0 +1,10 @@
+"0","```r
+#Create a new column for percent of total customer payment
+g.payments$PerctTotal<-g.payments$Total/sum(g.payments$Total)
+
+#Arrange PerctTotal column in descending order
+g.payments<-arrange(g.payments,desc(PerctTotal))
+
+#Preview data
+head(g.payments)
+```"
