@@ -77,3 +77,4 @@ server <- function(input, output)
 output$chart <- renderDygraph({dygraph(Cl(getSymbols(input$symbol, auto.assign=FALSE)))}) # graph time series
 }
 shinyApp(ui, server)
+

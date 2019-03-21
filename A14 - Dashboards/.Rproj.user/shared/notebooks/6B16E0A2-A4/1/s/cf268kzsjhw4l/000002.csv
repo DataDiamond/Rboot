@@ -1,4 +1,0 @@
-"0","```r
-dbReadTable(conn,\"Customers\")
-dbReadTable(conn,\"Payments\")
-```"

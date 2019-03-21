@@ -1,3 +1,0 @@
-"0","```r
-conn <- dbConnect(RMySQL::MySQL(), \"richardtwatson.com\", dbname=\"ClassicModels\", user=\"student\", password=\"student\")
-```"

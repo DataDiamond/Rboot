@@ -1,4 +1,0 @@
-"0","```r
-payments <- dbGetQuery(conn, \"SELECT customerNumber, amount FROM Payments;\")
-head(payments)
-```"
