@@ -25,19 +25,20 @@ head(rev)
 ord <- dbGetQuery(conn, "SELECT * FROM Orders WHERE shippedDate between '2005-04-01' and '2005-04-31' ;")
 head(ord)
 
-#Basic Dashboard Layout'
+#Basic Dashboard Layout
 header <- dashboardHeader(title = 'Orders and Revenue')
 sidebar <- dashboardSidebar()
 body <- dashboardBody()
 ui <-dashboardPage(header,sidebar,body)
 
+#Creating Dashboard sidebar
 menuRev <-  menuItem("Revenue", tabName = "Revenue", icon = icon("dashboard"))
 menuOrd <- menuItem("Orders", tabName = "Orders", icon = icon("dashboard"))
 sidebar <- dashboardSidebar(sidebarMenu(menuRev, menuOrd))
 
 boxControl <- box(title = "Controls", sliderInput("slider", "Months:", 1, 12, 4), sliderInput("slider", "Year:",as.numeric(substring(min(rev$paymentDate),1,4)),as.numeric(substring(max(rev$paymentDate),1,4)), 2005))
 
-
+#Creating Dashboard Body
 boxLatest <- box(title = 'Latest price: ',rev$Last, background = 'blue' )
 boxChange <-  box(title = 'Change ',getQuote('AAPL')$Change, background = 'red' )
 row1 <- fluidRow(boxLatest,boxChange)
@@ -48,6 +49,8 @@ tabRev <-  tabItem(tabName = "Revenue", getQuote('AAPL')$Last)
 tabOrd <-  tabItem(tabName = "Orders", getQuote('GOOG')$Last)
 tabs <-  tabItems(tabRev,tabOrd)
 body <- dashboardBody(tabs, row1, row2)
+
+#Creating Dashboard Page
 ui <- dashboardPage(header,sidebar,body)
 
 #Run dashboard
