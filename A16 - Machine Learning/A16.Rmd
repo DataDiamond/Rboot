@@ -37,8 +37,8 @@ $$ \hat{Price} = \beta_0 + \beta_1 (Sale) + \beta_2 (Miles) + \beta_3 (ModelY) +
 From the model, the average price of a vehicle, holding all else constant, is $22,890. 
 If the car was an online sale, the price increased by $591.70. 
 For every additional mile on a car, the price decreases by $0.01.
-Relative to ModelZ, ModelY cars are worth $5,617. 
-A ModelZ car is worth $12,240.
+Relative to ModelX, ModelY cars are worth $5,617 more. 
+A ModelZ car is worth $12,240 than the ModelX cars.
 Overall, this model explains about 94% of the data and is significant at the 0.01 level. 
 
 
@@ -82,4 +82,14 @@ st
 ```
  P-value is greater than 0.05, so the null hypothesis that the data is normally distributed is not rejected. The data is more normally distributed.
  
+ 
+###Re-run Regression Model
+```{r}
+reg <- lm(price ~ sale + miles + model, data = data)
+summary(reg)
+```
 
+This model is run with the normalized data that excludes outliers. As a result, the estimates are no longer impacted by those values.
+
+$$ \hat{Price} = \beta_0 + \beta_1 (Sale) + \beta_2 (Miles) + \beta_3 (ModelY) + \beta_4 (ModelZ)$$
+$$ \hat{Price} = 7,129 + 1,347 (Sale) + .073 (Miles) + 5,799 (ModelY) + 12,280 (ModelZ)$$

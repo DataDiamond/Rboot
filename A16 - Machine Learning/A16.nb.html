@@ -308,7 +308,7 @@ F-statistic:  2963 on 4 and 814 DF,  p-value: &lt; 2.2e-16</code></pre>
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p><span class="math display">\[ \hat{Price} = \beta_0 + \beta_1 (Sale) + \beta_2 (Miles) + \beta_3 (ModelY) + \beta_4 (ModelZ)\]</span></p>
-<p>From the model, the average price of a vehicle, holding all else constant, is $22,890. If the car was an online sale, the price increased by $591.70. For every additional mile on a car, the price decreases by $0.01. Relative to ModelZ, ModelY cars are worth $5,617. A ModelZ car is worth $12,240. Overall, this model explains about 94% of the data and is significant at the 0.01 level.</p>
+<p>From the model, the average price of a vehicle, holding all else constant, is $22,890. If the car was an online sale, the price increased by $591.70. For every additional mile on a car, the price decreases by $0.01. Relative to ModelX, ModelY cars are worth $5,617 more. A ModelZ car is worth $12,240 than the ModelX cars. Overall, this model explains about 94% of the data and is significant at the 0.01 level.</p>
 </div>
 <div id="residual-analysis" class="section level3">
 <h3>Residual Analysis</h3>
@@ -385,11 +385,47 @@ W = 0.93159, p-value = 0.09459</code></pre>
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>P-value is greater than 0.05, so the null hypothesis that the data is normally distributed is not rejected. The data is more normally distributed.</p>
+</div>
+</div>
+<div id="re-run-regression-model" class="section level3">
+<h3>Re-run Regression Model</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShyZWcpXG5cbmBgYCJ9 -->
+<pre class="r"><code>summary(reg)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxubG0oZm9ybXVsYSA9IHByaWNlIH4gc2FsZSArIG1pbGVzICsgbW9kZWwsIGRhdGEgPSBkYXRhKVxuXG5SZXNpZHVhbHM6XG4gICAgTWluICAgICAgMVEgIE1lZGlhbiAgICAgIDNRICAgICBNYXggXG4tNzg1Ljg2IC0xNzIuMjQgICAzMS40MSAgMTg4LjEyICAzNjQuMTMgXG5cbkNvZWZmaWNpZW50czpcbiAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgIDcuMTM5ZSswMyAgNC43MTllKzAyICAxNS4xMjYgMi4wNmUtMTIgKioqXG5zYWxlT25saW5lICAgMS4zNDdlKzA0ICAzLjI2M2UrMDIgIDQxLjI4NyAgPCAyZS0xNiAqKipcbm1pbGVzICAgICAgIC03LjMyOWUtMDIgIDEuMDI5ZS0wMiAgLTcuMTI1IDYuNjVlLTA3ICoqKlxubW9kZWxZICAgICAgIDUuNzk5ZSswMyAgMS44MzNlKzAyICAzMS42NDYgIDwgMmUtMTYgKioqXG5tb2RlbFogICAgICAgMS4yMjhlKzA0ICAxLjg2NGUrMDIgIDY1Ljg1OCAgPCAyZS0xNiAqKipcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG5SZXNpZHVhbCBzdGFuZGFyZCBlcnJvcjogMjkyLjYgb24gMjAgZGVncmVlcyBvZiBmcmVlZG9tXG5NdWx0aXBsZSBSLXNxdWFyZWQ6ICAwLjk5ODEsXHRBZGp1c3RlZCBSLXNxdWFyZWQ6ICAwLjk5NzggXG5GLXN0YXRpc3RpYzogIDI2OTMgb24gNCBhbmQgMjAgREYsICBwLXZhbHVlOiA8IDIuMmUtMTZcbiJ9 -->
+<pre><code>
+Call:
+lm(formula = price ~ sale + miles + model, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-785.86 -172.24   31.41  188.12  364.13 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  7.139e+03  4.719e+02  15.126 2.06e-12 ***
+saleOnline   1.347e+04  3.263e+02  41.287  &lt; 2e-16 ***
+miles       -7.329e-02  1.029e-02  -7.125 6.65e-07 ***
+modelY       5.799e+03  1.833e+02  31.646  &lt; 2e-16 ***
+modelZ       1.228e+04  1.864e+02  65.858  &lt; 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 292.6 on 20 degrees of freedom
+Multiple R-squared:  0.9981,    Adjusted R-squared:  0.9978 
+F-statistic:  2693 on 4 and 20 DF,  p-value: &lt; 2.2e-16</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>This model is run with the normalized data that excludes outliers. As a result, the estimates are no longer impacted by those values.</p>
+<p><span class="math display">\[ \hat{Price} = \beta_0 + \beta_1 (Sale) + \beta_2 (Miles) + \beta_3 (ModelY) + \beta_4 (ModelZ)\]</span> <span class="math display">\[ \hat{Price} = 7,129 + 1,347 (Sale) + .073 (Miles) + 5,799 (ModelY) + 12,280 (ModelZ)\]</span></p>
 <!-- rnb-text-end -->
 </div>
-</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkExNiAtIE1hY2hpbmUgbGVhcm5pbmcgKHJlZ3Jlc3Npb24pIg0KYXV0aG9yOg0KLSBCcnlhbmEgQmVuc29uDQotIENvbm5lciBCcnlhbg0Kb3V0cHV0Og0KICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQNCiAgaHRtbF9ub3RlYm9vazogZGVmYXVsdA0KLS0tDQoNClJlYWQgdGhlIE1hbmhlaW0gY2FzZSBhbmQgdGhlbiBidWlsZCBhIGxpbmVhciByZWdyZXNzaW9uIG1vZGVsIGZvciBwcmVkaWN0aW5nIHRoZSBzZWxsaW5nIHByaWNlIG9mIGEgY2FyIHVzaW5nIDxodHRwOi8vd3d3LnJpY2hhcmR0d2F0c29uLmNvbS9kYXRhL21hbmhlaW0uY3N2Pi4gRm9sbG93IHRoZSBwcmluY2lwbGVzIGZvciByZXNpZHVhbCBhbmFseXNpcy4NCg0KIyMjTGlicmFyaWVzDQpgYGB7ciBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQ0KbGlicmFyeShyZWFkcikNCmxpYnJhcnkoZ2dwbG90MikNCmxpYnJhcnkoZHBseXIpDQpgYGANCg0KDQojIyNSZWFkIERhdGENCmBgYHtyIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9DQpkYXRhIDwtIHJlYWRfY3N2KCJodHRwOi8vd3d3LnJpY2hhcmR0d2F0c29uLmNvbS9kYXRhL21hbmhlaW0uY3N2IikNCg0KaGVhZChkYXRhKQ0KYGBgDQoNCg0KIyMjTGluZWFyIFJlZ3Jlc3Npb24NCmBgYHtyfQ0KcmVnIDwtIGxtKHByaWNlIH4gc2FsZSArIG1pbGVzICsgbW9kZWwsIGRhdGEgPSBkYXRhKQ0Kc3VtbWFyeShyZWcpDQpgYGANCg0KJCQgXGhhdHtQcmljZX0gPSBcYmV0YV8wICsgXGJldGFfMSAoU2FsZSkgKyBcYmV0YV8yIChNaWxlcykgKyBcYmV0YV8zIChNb2RlbFkpICsgXGJldGFfNCAoTW9kZWxaKSQkDQoNCkZyb20gdGhlIG1vZGVsLCB0aGUgYXZlcmFnZSBwcmljZSBvZiBhIHZlaGljbGUsIGhvbGRpbmcgYWxsIGVsc2UgY29uc3RhbnQsIGlzICQyMiw4OTAuIA0KSWYgdGhlIGNhciB3YXMgYW4gb25saW5lIHNhbGUsIHRoZSBwcmljZSBpbmNyZWFzZWQgYnkgJDU5MS43MC4gDQpGb3IgZXZlcnkgYWRkaXRpb25hbCBtaWxlIG9uIGEgY2FyLCB0aGUgcHJpY2UgZGVjcmVhc2VzIGJ5ICQwLjAxLg0KUmVsYXRpdmUgdG8gTW9kZWxaLCBNb2RlbFkgY2FycyBhcmUgd29ydGggJDUsNjE3LiANCkEgTW9kZWxaIGNhciBpcyB3b3J0aCAkMTIsMjQwLg0KT3ZlcmFsbCwgdGhpcyBtb2RlbCBleHBsYWlucyBhYm91dCA5NCUgb2YgdGhlIGRhdGEgYW5kIGlzIHNpZ25pZmljYW50IGF0IHRoZSAwLjAxIGxldmVsLiANCg0KDQojIyNSZXNpZHVhbCBBbmFseXNpcw0KDQojIyMjQWRkIHJlc2lkdWFscyB0byBkYXRhc2V0DQpgYGB7cn0NCmRhdGEkcmVzaWR1YWxzIDwtIHJlZyRyZXNpZHVhbHMNCmBgYA0KDQojIyMjUGxvdCByZXNpZHVhbHMNCmBgYHtyfQ0KZ2dwbG90KGRhdGEsYWVzKHByaWNlLHJlZyRyZXNpZHVhbHMpKSArDQpnZW9tX3BvaW50KCkgKw0KZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gMCwgY29sb3I9J3JlZCcpDQpgYGANCg0KIyMjI1J1biBTaGFwaXJvIFRlc3QgZm9yIE91dGxpZXJzDQpgYGB7cn0NCnNoYXBpcm8udGVzdChyZWckcmVzaWR1YWxzKQ0KYGBgDQpQLXZhbHVlIGlzIGxlc3MgdGhhbiAwLjA1LCBzbyB0aGUgbnVsbCBoeXBvdGhlc2lzIHRoYXQgdGhlIGRhdGEgaXMgbm9ybWFsbHkgZGlzdHJpYnV0ZWQgaXMgcmVqZWN0ZWQuIFRoZXJlIGlzIGV2aWRlbmNlIG9mIG91dGxpZXJzIGluIHRoZSBkYXRhLg0KDQoNCiMjIyNSZW1vdmUgT3V0bGllcnMgYW5kIHJlLXJ1biBTaGFwaXJvLVdpbGsgbm9ybWFsaXR5IHRlc3QNCmBgYHtyfQ0Kc3QgPC0gc2hhcGlyby50ZXN0KGRhdGEkcmVzaWR1YWxzKQ0KDQp3aGlsZShzdCRwLnZhbHVlIDwgLjA1KSB7DQpkYXRhIDwtIGRhdGEgJT4lIGZpbHRlcigoZGF0YSRyZXNpZHVhbHMpIDwgbWF4KGRhdGEkcmVzaWR1YWxzKSkNCg0KbW9kIDwtIGxtKGRhdGEkcHJpY2UgfiBkYXRhJG1pbGVzICsgZGF0YSRtb2RlbCArIGRhdGEkc2FsZSkNCg0KZGF0YSRyZXNpZHVhbHMgPC0gbW9kJHJlc2lkdWFscw0KDQpzdCA8LSBzaGFwaXJvLnRlc3QoZGF0YSRyZXNpZHVhbHMpDQp9DQoNCnN0DQoNCmBgYA0KIFAtdmFsdWUgaXMgZ3JlYXRlciB0aGFuIDAuMDUsIHNvIHRoZSBudWxsIGh5cG90aGVzaXMgdGhhdCB0aGUgZGF0YSBpcyBub3JtYWxseSBkaXN0cmlidXRlZCBpcyBub3QgcmVqZWN0ZWQuIFRoZSBkYXRhIGlzIG1vcmUgbm9ybWFsbHkgZGlzdHJpYnV0ZWQuDQogDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkExNiAtIE1hY2hpbmUgbGVhcm5pbmcgKHJlZ3Jlc3Npb24pIg0KYXV0aG9yOg0KLSBCcnlhbmEgQmVuc29uDQotIENvbm5lciBCcnlhbg0Kb3V0cHV0Og0KICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQNCiAgaHRtbF9ub3RlYm9vazogZGVmYXVsdA0KLS0tDQoNClJlYWQgdGhlIE1hbmhlaW0gY2FzZSBhbmQgdGhlbiBidWlsZCBhIGxpbmVhciByZWdyZXNzaW9uIG1vZGVsIGZvciBwcmVkaWN0aW5nIHRoZSBzZWxsaW5nIHByaWNlIG9mIGEgY2FyIHVzaW5nIDxodHRwOi8vd3d3LnJpY2hhcmR0d2F0c29uLmNvbS9kYXRhL21hbmhlaW0uY3N2Pi4gRm9sbG93IHRoZSBwcmluY2lwbGVzIGZvciByZXNpZHVhbCBhbmFseXNpcy4NCg0KIyMjTGlicmFyaWVzDQpgYGB7ciBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQ0KbGlicmFyeShyZWFkcikNCmxpYnJhcnkoZ2dwbG90MikNCmxpYnJhcnkoZHBseXIpDQpgYGANCg0KDQojIyNSZWFkIERhdGENCmBgYHtyIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9DQpkYXRhIDwtIHJlYWRfY3N2KCJodHRwOi8vd3d3LnJpY2hhcmR0d2F0c29uLmNvbS9kYXRhL21hbmhlaW0uY3N2IikNCg0KaGVhZChkYXRhKQ0KYGBgDQoNCg0KIyMjTGluZWFyIFJlZ3Jlc3Npb24NCmBgYHtyfQ0KcmVnIDwtIGxtKHByaWNlIH4gc2FsZSArIG1pbGVzICsgbW9kZWwsIGRhdGEgPSBkYXRhKQ0Kc3VtbWFyeShyZWcpDQpgYGANCg0KJCQgXGhhdHtQcmljZX0gPSBcYmV0YV8wICsgXGJldGFfMSAoU2FsZSkgKyBcYmV0YV8yIChNaWxlcykgKyBcYmV0YV8zIChNb2RlbFkpICsgXGJldGFfNCAoTW9kZWxaKSQkDQoNCkZyb20gdGhlIG1vZGVsLCB0aGUgYXZlcmFnZSBwcmljZSBvZiBhIHZlaGljbGUsIGhvbGRpbmcgYWxsIGVsc2UgY29uc3RhbnQsIGlzICQyMiw4OTAuIA0KSWYgdGhlIGNhciB3YXMgYW4gb25saW5lIHNhbGUsIHRoZSBwcmljZSBpbmNyZWFzZWQgYnkgJDU5MS43MC4gDQpGb3IgZXZlcnkgYWRkaXRpb25hbCBtaWxlIG9uIGEgY2FyLCB0aGUgcHJpY2UgZGVjcmVhc2VzIGJ5ICQwLjAxLg0KUmVsYXRpdmUgdG8gTW9kZWxYLCBNb2RlbFkgY2FycyBhcmUgd29ydGggJDUsNjE3IG1vcmUuIA0KQSBNb2RlbFogY2FyIGlzIHdvcnRoICQxMiwyNDAgdGhhbiB0aGUgTW9kZWxYIGNhcnMuDQpPdmVyYWxsLCB0aGlzIG1vZGVsIGV4cGxhaW5zIGFib3V0IDk0JSBvZiB0aGUgZGF0YSBhbmQgaXMgc2lnbmlmaWNhbnQgYXQgdGhlIDAuMDEgbGV2ZWwuIA0KDQoNCiMjI1Jlc2lkdWFsIEFuYWx5c2lzDQoNCiMjIyNBZGQgcmVzaWR1YWxzIHRvIGRhdGFzZXQNCmBgYHtyfQ0KZGF0YSRyZXNpZHVhbHMgPC0gcmVnJHJlc2lkdWFscw0KYGBgDQoNCiMjIyNQbG90IHJlc2lkdWFscw0KYGBge3J9DQpnZ3Bsb3QoZGF0YSxhZXMocHJpY2UscmVnJHJlc2lkdWFscykpICsNCmdlb21fcG9pbnQoKSArDQpnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSAwLCBjb2xvcj0ncmVkJykNCmBgYA0KDQojIyMjUnVuIFNoYXBpcm8gVGVzdCBmb3IgT3V0bGllcnMNCmBgYHtyfQ0Kc2hhcGlyby50ZXN0KHJlZyRyZXNpZHVhbHMpDQpgYGANClAtdmFsdWUgaXMgbGVzcyB0aGFuIDAuMDUsIHNvIHRoZSBudWxsIGh5cG90aGVzaXMgdGhhdCB0aGUgZGF0YSBpcyBub3JtYWxseSBkaXN0cmlidXRlZCBpcyByZWplY3RlZC4gVGhlcmUgaXMgZXZpZGVuY2Ugb2Ygb3V0bGllcnMgaW4gdGhlIGRhdGEuDQoNCg0KIyMjI1JlbW92ZSBPdXRsaWVycyBhbmQgcmUtcnVuIFNoYXBpcm8tV2lsayBub3JtYWxpdHkgdGVzdA0KYGBge3J9DQpzdCA8LSBzaGFwaXJvLnRlc3QoZGF0YSRyZXNpZHVhbHMpDQoNCndoaWxlKHN0JHAudmFsdWUgPCAuMDUpIHsNCmRhdGEgPC0gZGF0YSAlPiUgZmlsdGVyKChkYXRhJHJlc2lkdWFscykgPCBtYXgoZGF0YSRyZXNpZHVhbHMpKQ0KDQptb2QgPC0gbG0oZGF0YSRwcmljZSB+IGRhdGEkbWlsZXMgKyBkYXRhJG1vZGVsICsgZGF0YSRzYWxlKQ0KDQpkYXRhJHJlc2lkdWFscyA8LSBtb2QkcmVzaWR1YWxzDQoNCnN0IDwtIHNoYXBpcm8udGVzdChkYXRhJHJlc2lkdWFscykNCn0NCg0Kc3QNCg0KYGBgDQogUC12YWx1ZSBpcyBncmVhdGVyIHRoYW4gMC4wNSwgc28gdGhlIG51bGwgaHlwb3RoZXNpcyB0aGF0IHRoZSBkYXRhIGlzIG5vcm1hbGx5IGRpc3RyaWJ1dGVkIGlzIG5vdCByZWplY3RlZC4gVGhlIGRhdGEgaXMgbW9yZSBub3JtYWxseSBkaXN0cmlidXRlZC4NCiANCiANCiMjI1JlLXJ1biBSZWdyZXNzaW9uIE1vZGVsDQpgYGB7cn0NCnJlZyA8LSBsbShwcmljZSB+IHNhbGUgKyBtaWxlcyArIG1vZGVsLCBkYXRhID0gZGF0YSkNCnN1bW1hcnkocmVnKQ0KYGBgDQoNClRoaXMgbW9kZWwgaXMgcnVuIHdpdGggdGhlIG5vcm1hbGl6ZWQgZGF0YSB0aGF0IGV4Y2x1ZGVzIG91dGxpZXJzLiBBcyBhIHJlc3VsdCwgdGhlIGVzdGltYXRlcyBhcmUgbm8gbG9uZ2VyIGltcGFjdGVkIGJ5IHRob3NlIHZhbHVlcy4NCg0KJCQgXGhhdHtQcmljZX0gPSBcYmV0YV8wICsgXGJldGFfMSAoU2FsZSkgKyBcYmV0YV8yIChNaWxlcykgKyBcYmV0YV8zIChNb2RlbFkpICsgXGJldGFfNCAoTW9kZWxaKSQkDQokJCBcaGF0e1ByaWNlfSA9IDcsMTI5ICsgMSwzNDcgKFNhbGUpICsgLjA3MyAoTWlsZXMpICsgNSw3OTkgKE1vZGVsWSkgKyAxMiwyODAgKE1vZGVsWikkJA0K</div>
 
 
 
