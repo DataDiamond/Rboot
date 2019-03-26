@@ -1,0 +1,85 @@
+---
+title: "A16 - Machine learning (regression)"
+author:
+- Bryana Benson
+- Conner Bryan
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+Read the Manheim case and then build a linear regression model for predicting the selling price of a car using <http://www.richardtwatson.com/data/manheim.csv>. Follow the principles for residual analysis.
+
+###Libraries
+```{r message=FALSE, warning=FALSE}
+library(readr)
+library(ggplot2)
+library(dplyr)
+```
+
+
+###Read Data
+```{r message=FALSE, warning=FALSE}
+data <- read_csv("http://www.richardtwatson.com/data/manheim.csv")
+
+head(data)
+```
+
+
+###Linear Regression
+```{r}
+reg <- lm(price ~ sale + miles + model, data = data)
+summary(reg)
+```
+
+$$ \hat{Price} = \beta_0 + \beta_1 (Sale) + \beta_2 (Miles) + \beta_3 (ModelY) + \beta_4 (ModelZ)$$
+
+From the model, the average price of a vehicle, holding all else constant, is $22,890. 
+If the car was an online sale, the price increased by $591.70. 
+For every additional mile on a car, the price decreases by $0.01.
+Relative to ModelZ, ModelY cars are worth $5,617. 
+A ModelZ car is worth $12,240.
+Overall, this model explains about 94% of the data and is significant at the 0.01 level. 
+
+
+###Residual Analysis
+
+####Add residuals to dataset
+```{r}
+data$residuals <- reg$residuals
+```
+
+####Plot residuals
+```{r}
+ggplot(data,aes(price,reg$residuals)) +
+geom_point() +
+geom_hline(yintercept = 0, color='red')
+```
+
+####Run Shapiro Test for Outliers
+```{r}
+shapiro.test(reg$residuals)
+```
+P-value is less than 0.05, so the null hypothesis that the data is normally distributed is rejected. There is evidence of outliers in the data.
+
+
+####Remove Outliers and re-run Shapiro-Wilk normality test
+```{r}
+st <- shapiro.test(data$residuals)
+
+while(st$p.value < .05) {
+data <- data %>% filter((data$residuals) < max(data$residuals))
+
+mod <- lm(data$price ~ data$miles + data$model + data$sale)
+
+data$residuals <- mod$residuals
+
+st <- shapiro.test(data$residuals)
+}
+
+st
+
+```
+ P-value is greater than 0.05, so the null hypothesis that the data is normally distributed is not rejected. The data is more normally distributed.
+ 
+

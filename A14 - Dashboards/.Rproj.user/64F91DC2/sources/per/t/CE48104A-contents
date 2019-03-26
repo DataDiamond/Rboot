@@ -13,6 +13,7 @@ library(dygraphs)
 
 ###Dashobard Header
 header <- dashboardHeader(title = 'Classic Models Revenue and Orders Dashboard')
+
 ###Dashobard Sidebar
 sidebar <- dashboardSidebar()
 
@@ -41,23 +42,26 @@ body <- dashboardBody(row1, row2)
 ui <- dashboardPage(header,sidebar,body)
 
 ###Create Server
-server <- function(input, output){
- 
-   conn <- dbConnect(RMySQL::MySQL(), "richardtwatson.com", dbname="ClassicModels", user="student", password="student")
+server <- function(input, output) {
   
-   output$Rev <- renderText({
+  #connecting to server
+  conn <-dbConnect(RMySQL::MySQL(), "www.richardtwatson.com", dbname="ClassicModels", user="student", password="student")
+  
+  output$Revenue <- renderText({
+    
     sql1 <- paste0('SELECT FORMAT(SUM(quantityOrdered*priceEach),2)
-                    FROM Orders JOIN OrderDetails ON Orders.orderNumber = OrderDetails.orderNumber
-                    WHERE YEAR(orderDate) = ',input$Year,' AND MONTH(orderDate)=', input$Month)
-    query1 <- dbGetQuery(conn, sql1)[1,1]
-  })
- 
-    output$Ord <- renderText({
-    sql2 <- paste0('SELECT COUNT(Orders.orderNumber)
-                    FROM Orders JOIN OrderDetails ON Orders.orderNumber = OrderDetails.orderNumber
-                    WHERE YEAR(orderDate) = ',input$Year,' AND MONTH(orderDate)=', input$Month)
-    query2 <- dbGetQuery(conn, sql2)[1,1]
-  })
+                 FROM Orders JOIN OrderDetails ON Orders.orderNumber = OrderDetails.orderNumber 
+                 WHERE YEAR(orderDate) = ',input$Year,' AND MONTH(orderDate)=', input$Month)
+    
+    query1 <- dbGetQuery(conn, sql1)[1,1]})
+  
+  output$Orders <- renderText({
+    
+    sql2 <- paste0('SELECT COUNT(Orders.orderNumber) FROM Orders JOIN OrderDetails ON Orders.orderNumber = OrderDetails.orderNumber WHERE YEAR(orderDate) = ',input$Year,' AND MONTH(orderDate)=', input$Month) 
+    
+    query2 <- dbGetQuery(conn, sql2)[1,1]})
 }
 
 shinyApp(ui, server)
+
+

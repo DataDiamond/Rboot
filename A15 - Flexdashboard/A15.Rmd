@@ -1,0 +1,50 @@
+---
+title: "A15 - Flexdashboard"
+output: html_notebook
+author:
+  - Bryana Benson
+  - Conner Bryan
+---
+
+###Libraries
+
+```{r message=FALSE, warning=FALSE}
+library(readr)
+
+```
+
+###Read Data
+
+Read the Manheim data file <http://www.richardtwatson.com/data/manheim.csv> and create a 2x2 dashboard using flexdashboard showing.
+
+```{r message=FALSE, warning=FALSE}
+data <- read_csv("http://www.richardtwatson.com/data/manheim.csv")
+
+head(data)
+```
+
+###Create Table
+
+A table with the number of observations for each combination of the sale and model factors (use xtabs).
+
+```{r}
+xtabs(Freq ~ sale + model, data)
+```
+
+
+###Create Boxplot
+
+A boxplot of price by model
+
+
+###Scatter Plots
+
+A scatter plot of miles by price for each model
+
+A scatter plot of miles by price for each sale
+
+
+
+
+
+
