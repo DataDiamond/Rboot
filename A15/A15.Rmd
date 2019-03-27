@@ -1,11 +1,12 @@
 ---
-title: "Assignment 15"
+title: "A15 - FlexDashboard"
 authors:
 - Bryana Benson
 - Conner Bryan
-output: 
+output:   
   flexdashboard::flex_dashboard:
     orientation: rows
+
 ---
     
 ```{r warning=FALSE, message=FALSE}
