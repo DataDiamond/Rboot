@@ -1,5 +1,3 @@
-#Assignment 15
-
 library(flexdashboard)
 library(Quandl)
 library(readr)
