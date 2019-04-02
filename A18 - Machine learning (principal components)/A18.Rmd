@@ -1,0 +1,121 @@
+---
+title: "A18 - Machine Learning (principal components)"
+author: 
+- Bryana Benson
+- Conner Bryan
+date: "March 27, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Using FT Global 500 data, apply forcats::fct_lump() to create five groups of sectors (the top four by number of companies and the rest). Do a principal components analysis.
+
+###Library
+```{r message=FALSE, warning=FALSE}
+library(readxl)
+library(dplyr)
+library(corrplot)
+library(ggplot2)
+```
+
+###Data
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#read in data
+data <- read_excel("FTglobal500.xls", skip = 3)
+
+#omit NA
+data <-na.omit(data)
+```
+Remove omitted data in the dataset to prevent errors.
+
+
+```{r}
+#Select only numeric variables
+data.n <- select_if(data, is.numeric)
+
+```
+Since PCA works best with numerical data, you'll exclude the categorical variables, and view the correlations.
+
+```{r}
+#Correlations of numeric data
+corr <- round(cor(data.n),2)
+```
+The Global Rank in 2014 and 2015 are highly correlated. The Market Value in Millions has a strong negative correlation to Global Rank in 2014 and 2015. Market value and Net income have a moderately - strong positive corrleation.
+
+
+###PCA prep and Plot
+
+####Data Types
+```{r}
+#check data types
+str(data)
+
+#change Sector data type to factor
+data$Sector <- as.factor(data$Sector)
+
+```
+
+
+```{r}
+#Add back Sector column to numeric dataset
+data.n$Sector <- data$Sector
+
+#Rename data.n back to data
+data <- data.n
+```
+
+
+####Plots
+```{r}
+plot(data)
+```
+
+
+####Grouping
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+#Use negative value to collapse the 4 most common groups of Sectors
+data$Sector<- forcats::fct_lump(data$Sector, n= -4)
+
+```
+fact_lump lumps together least/most common factor levels into "other". In this case, we want to lump together the 4 most common Sectors and leave the rest in Other.
+
+### Principal Component Analysis
+
+The purpose of principal components analysis is to reduce the complexity of a multivariate dataset into a principal components space. It includes the mathematical transformation of number of possibly correlated variables into a smaller number of uncorrelated variables.
+
+```{r}
+#run PCA
+pca <- prcomp(data[,c(1:9)],center = T, scale=T)
+pca
+```
+
+You obtain 9 principal components, which shows the correlation between each variable and each prinicpal components.
+
+
+```{r}
+summary(pca)
+```
+
+For example, PC1 explains 37% of the total variance, which means that 37% of the information in the dataset can be encapsulated by just that one Principal Component. 
+
+PC2 explains 15% of the variance.
+
+PC1 and PC2 can explain 52% of the variance.
+
+
+```{r}
+biplot(pca)
+
+```
+
+```{r}
+#principal component score for each company
+pcaScore <- pca$x[,1]
+
+#Plot Sector and Score
+ggplot(data=NULL, aes(x=data$Sector,y=pcaScore)) +
+ geom_point()
+```
+
+
