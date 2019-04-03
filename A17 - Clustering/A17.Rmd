@@ -1,0 +1,85 @@
+---
+title: "A17"
+author:
+  -Bryana Benson
+  -Conner Bryan
+output: html_document
+---
+## A17
+
+### Libraries
+```{r echo=FALSE, include=FALSE}
+library(readxl)
+library(readr)
+#install.packages("NbClust")
+library(NbClust)
+library(tidyverse)
+#install.packages("rattle")
+library(rattle)
+#install.packages("cluster")
+library(cluster)
+```
+
+### Reading the Data
+```{r echo=FALSE}
+url<-"http://im.ft-static.com/content/images/b38c350e-169d-11e5-b07f-00144feabdc0.xls"
+data<-read_xls(url)
+
+#data<-read_excel("FTGlobal500.xls")
+```
+
+
+### Cleaning the Data
+```{r echo=FALSE}
+colnames(data)<-data[4,]
+data<-data[-(1:4),]
+
+companies<-data$Company
+
+data <- sapply(data, as.numeric)
+data<-as.data.frame(data)
+data<-data[, -c(3,4,6)]
+data$Company<-companies
+
+data<-na.omit(data)
+
+top_20<- data %>%
+  arrange(desc(`Market value $m`))
+
+top_20<-top_20[1:20,]
+
+companies<-top_20$Company
+
+top_20<-top_20[,-12]
+
+rownames(top_20)<-companies
+
+head(top_20)
+```
+
+
+### Creating Clusters
+```{r echo=FALSE}
+clusters<-kmeans(top_20, 3)
+
+clusters$centers
+clusters$size
+```
+
+
+### Graphing two principal components
+```{r}
+clusplot(top_20, clusters$cluster, main='2D representation of the Cluster solution',
+         color=TRUE, shade=TRUE,
+         labels=2, lines=0)
+```
+
+
+### Plotting a dendrogram
+```{r echo=FALSE}
+d <- dist(top_20, method = "euclidean")
+H.fit <- hclust(d, method="ward.D")
+plot(H.fit, xlab="Company", sub="Clusters", cex=.7, col="purple")           # display dendogram
+groups <- cutree(H.fit, k=3)          # cut tree into 5 clusters
+rect.hclust(H.fit, k=3, border="red")
+```
