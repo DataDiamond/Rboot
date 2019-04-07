@@ -1,0 +1,87 @@
+##### A19
+## Bryana Benson
+## Conner Bryan
+
+
+##############################  Libraries  ################################
+#install.packages(c("psych", "GPArotation"))
+library(readr)
+library(psych)
+library(GPArotation)
+library(dplyr)
+library(ggplot2) 
+
+#install.packages("ggThemeAssist")
+
+############### Defendent Personality dataset #################
+
+# Load the dataset
+url<-"https://www.richardtwatson.com/data/jury.csv"
+P_data<-read_csv(url)
+head(P_data)
+colnames(P_data)
+
+P_data=P_data[complete.cases(P_data),]
+P_factor <- P_data %>% select(-Crime,-Phys_attr_manip,
+                              -Gender_defendent,-Sentence,
+                              -Gender_subject)
+colnames(P_factor)
+
+########################### Diagnostics #############################
+P_cor <- cor(P_factor)
+cortest.bartlett(P_factor, n=nrow(P_data)) # Null: correlations don't matter
+                                           # Also: is matrix factorable?
+KMO(P_factor) # measure the quality of data for factor analysis
+              # desired score between .8 and 1
+
+##### Removing those variables whose KMO index is <.7
+P_factor_red <- P_factor %>% select(-Serious)
+P_cor_1<-cor(P_factor_red)
+
+# How many factors?
+scree(P_factor)
+scree(P_factor_red)
+
+
+############### Trying different number of factors ################
+results <- tibble(factors = integer())
+start <- 2
+end <- 5
+for(i in start:end) {
+  fit <- fa(r = P_cor_1, nfactors = i, rotate = "oblimin", fm="minres")
+  # Record fit measures
+  results[i-start+1,1] <- i-1
+  # rms adjusted for degrees of freedom
+  # the sum of the squared off diagonal residuals divided by the degrees of freedom
+  results[i-start+1,2] <- fit$rms
+  results[i-start+1,3] <- fit$crms
+  # How well the factor model reproduce the correlation matrix
+  results[i-start+1,4] <- fit$fit
+  # Value of the function that is minimized by a maximum likelihood procedures
+  results[i-start+1,5] <- fit$objective
+} 
+
+colnames(results)[2]<-"rms"
+colnames(results)[3]<-"crms"
+colnames(results)[4]<-"fit"
+colnames(results)[5]<-"objective"
+
+#plotting some measures
+ggplot(data=results) +
+  geom_line(mapping = aes(x=factors, y=objective, color = 'objective')) +
+  geom_line(mapping = aes(x=factors, y=crms, color='crms')) +
+  geom_line(mapping = aes(x=factors, y=fit, color='fit')) +
+  scale_color_hue() +
+  labs(color = 'Measures') +
+  xlab('Factor') +
+  ylab('Measures') 
+
+###################### Three Factor Model ##########################
+fit <- fa(r = P_cor_1, nfactors = 3, rotate = "oblimin",fm="minres")
+print(fit$loadings,cutoff = 0.3) 
+
+fa.diagram(fit) #diagramming the factors
+
+##### Renaming factors and redoing diagram with names
+colnames(fit$loadings) <- c("Charisma", "Benevolence", "Placidity")
+fa.diagram(fit)
