@@ -1,14 +1,16 @@
 ---
 title: "A19"
-author:
-  -Bryana Benson
-  -Conner Bryan
-output: html_document
+author: 
+    - Bryana Benson 
+    - Conner Bryan
+output:
+  pdf_document: default
+  html_document: default
 ---
 ## A1p
 
 ### Libraries
-```{r echo=FALSE, include=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 #install.packages(c("psych", "GPArotation"))
 library(readr)
 library(psych)
@@ -18,7 +20,7 @@ library(ggplot2)
 ```
 
 ### Reading the Data
-```{r echo=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 url<-"https://www.richardtwatson.com/data/jury.csv"
 P_data<-read_csv(url)
 head(P_data)
@@ -32,7 +34,7 @@ colnames(P_factor)
 ```
 
 ### Running Diagnostics
-```{r echo=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 P_cor <- cor(P_factor)
 cortest.bartlett(P_factor, n=nrow(P_data)) # Null: correlations don't matter
                                            # Also: is matrix factorable?
@@ -49,7 +51,7 @@ scree(P_factor_red)
 
 
 ### Testing Different Numbers of Factors
-```{r echo=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 results <- tibble(factors = integer())
 start <- 2
 end <- 5
@@ -85,7 +87,7 @@ ggplot(data=results) +
 
 
 ### Diagramming Three Factor Solution
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 fit <- fa(r = P_cor_1, nfactors = 3, rotate = "oblimin",fm="minres")
 print(fit$loadings,cutoff = 0.3) 
 
