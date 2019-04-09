@@ -109,3 +109,17 @@ paste('MSEs for linear regression and neural net(5):',
       round(MSE.lm, 0),
       '&',
       round(MSE.net.5,0)); paste('Percent difference for nn(5):', round(((MSE.net.5 - MSE.lm)/MSE.lm*100),2),'%')
+
+########## Graphing the Comparison
+
+data <- data %>% mutate(diff = predict.lm - predict.net.4)
+ggplot(data, aes(x=price)) +
+  geom_point(aes(y=diff, color='Prediction difference')) +
+  geom_point(aes(y=predict.lm, color='Linear model')) +
+  geom_point(aes(y=predict.net,color='Neural net')) +
+  geom_abline(intercept = 0, slope = 1) +
+  xlab('Actual price') +
+  ylab('Predicted price') +
+  scale_color_discrete(name="Color Legend") +
+  ggtitle("Comparison of Linear Regression & Neural Network",
+          subtitle="4 Hidden Layers in Neural Network")
