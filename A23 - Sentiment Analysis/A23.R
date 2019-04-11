@@ -1,0 +1,153 @@
+##### A23 - Sentiment Analysis
+### US & Australian Constitutions
+
+
+########## Libraries
+library(sentimentr)  # for sentiment analysis
+library(koRpus)      # for readability analysis
+#install.packages("koRpus.lang.en")
+library(koRpus.lang.en)
+
+#install.packages("readtext")
+library(readtext)
+library(tidyverse)
+library(stringr)
+
+########### Creating a character vector from text files
+USurl<-"http://www.richardtwatson.com/data/USConstitution.txt"
+USConst<-readtext(USurl)[,-1]
+
+AUSurl<-"http://www.richardtwatson.com/data/AustralianConstitution.txt"
+AUSConst<-readtext(AUSurl)[,-1]
+
+########################## Data Cleaning #############################
+
+# split into a vector
+USConst_split<-str_split(USConst, "\n")[[1]]
+AUSC_split<-str_split(AUSConst, "\n")[[1]]
+
+
+############ US Data cleanup
+# remove blank values (bc of double line spaces)
+USConst_split<-USConst_split[USConst_split != USConst_split[2]]
+
+# eliminating the names from the vector
+USConst_split<-USConst_split[-c(117:168)]
+
+# find Article and Section strings & remove
+Articles<-str_subset(USConst_split, "^Article.*\\.$")
+Alength<-length(Articles)
+
+for(i in 1:Alength) {
+  USConst_split<-USConst_split[USConst_split!=Articles[i]]
+}
+
+Sections<-str_subset(USConst_split, "^Section.*\\.$")
+Slength<-length(Sections)
+
+for(i in 1:Slength) {
+  USConst_split<-USConst_split[USConst_split!=Sections[i]]
+}
+
+
+########## AUS Data Cleanup
+# find Chapters, Parts, Headers and Titles & remove
+Chapters<-str_subset(AUSC_split, "Chapter.*")
+Clength<-length(Chapters)
+
+for(i in 1:Clength) {
+  AUSC_split<-AUSC_split[AUSC_split!=Chapters[i]]
+}
+
+Parts<-str_subset(AUSC_split, "Part.*")
+Plength<-length(Parts)
+
+for(i in 1:Plength) {
+  AUSC_split<-AUSC_split[AUSC_split!=Parts[i]]
+}
+
+Headers<-str_subset(AUSC_split, "^[1-9].*\\.")
+Hlength<-length(Headers)
+
+for(i in 1:Hlength) {
+  AUSC_split<-AUSC_split[AUSC_split!=Headers[i]]
+}
+
+CHeaders<-str_subset(AUSC_split, "CONSTITUTION")
+CHlength<-length(CHeaders)
+
+for(i in 1:CHlength) {
+  AUSC_split<-AUSC_split[AUSC_split!=CHeaders[i]]
+}
+
+############################# Word Count ##############################
+
+##### Australian Constituation
+AUSClength<-length(AUSC_split)
+
+AUSC_count=0
+for(i in 1:AUSClength) {
+  AUSC_count<-AUSC_count+str_count(AUSC_split[i], "[[:space:]]+")+1
+}
+
+paste("There are", AUSC_count, "words in the body of the Australian Consitution")
+
+##### United States Constitution
+USClength<-length(USConst_split)
+
+USC_count=0
+for(i in 1:USClength) {
+  USC_count<-USC_count+str_count(USConst_split[i], "[[:space:]]+")+1
+}
+
+paste("There are", USC_count, "words in the body of the U.S. Consitution")
+
+######################## Readability Analysis #########################
+
+######### US Constitution
+US.tagged.text <- koRpus::tokenize(as.character(USConst_split),
+                                format='obj',lang='en')
+
+US.results<-readability(US.tagged.text, hyphen=NULL,
+                        index="fast")
+
+paste("The U.S. Constitution has a readability index of",
+      US.results[["ARI"]])
+
+
+########## AUS Constituion
+AUS.tagged.text <- koRpus::tokenize(as.character(AUSC_split),
+                                   format='obj',lang='en')
+
+AUS.results<-readability(AUS.tagged.text, hyphen=NULL,
+                        index="fast")
+
+paste("The Australian Constitution has a readability index of",
+      AUS.results[["ARI"]])
+
+
+######################### Sentiment Analysis ##########################
+########## United States Constitution
+USC_senti<-sentiment(USConst_split, amplifier.weight = .5,
+                     n.before = 5.,
+                     n.after = 2,
+                     neutral.nonverb.like = TRUE)
+
+USC_positive<-ifelse(mean(USC_senti$sentiment)>0,"positive", "negative")
+paste("Accoding to our analysis, the U.S. Consitution has a score of",
+      round(mean(USC_senti$sentiment), 3), "for sentiment. This",
+      USC_positive, "value indicates that the document is",
+      USC_positive, "in sentiment overall.")
+
+########## Australian Constitution
+AUSC_senti<-sentiment(AUSC_split, amplifier.weight = .5,
+                      n.before = 5.,
+                      n.after = 2,
+                      neutral.nonverb.like = TRUE)
+
+AUSC_positive<-ifelse(mean(AUSC_senti$sentiment)>0,"positive", "negative")
+paste("Accoding to our analysis, the U.S. Consitution has a score of",
+      round(mean(AUSC_senti$sentiment), 3), "for sentiment. This",
+      AUSC_positive, "value indicates that the document is",
+      AUSC_positive, "in sentiment overall.")
+
