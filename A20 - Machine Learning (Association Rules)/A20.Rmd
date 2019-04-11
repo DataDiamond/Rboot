@@ -1,0 +1,111 @@
+---
+title: "Machine Learning - Association Rules"
+author:
+- Bryana Benson
+- Conner Bryan
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+
+Use Association Rules to do a market basket analysis for Superstore Sales. As a result of your analysis, what advice would you give to Superstore Sales?
+
+###Libraries
+```{r remedy01, message=FALSE, warning=FALSE}
+library(readxl)
+library(readr)
+library(arules)
+library(arulesViz)
+```
+
+
+
+#####Data Import
+```{r message=FALSE, warning=FALSE}
+#import Superstore Sales from directory
+sales <- readxl::read_excel("sales.xls")
+#Preview first few rows of data
+head(sales)
+```
+
+#####File Prep
+
+Create a transaction file with the Order ID and Product Name columns. 
+```{r}
+#Extract Order ID and Product Name columns
+t <- sales[,c(2,17)]
+
+#Create a CSV file called "transactions"
+readr::write_csv(t, "transactions.csv")
+
+#Convert to transaction file
+trans <- arules::read.transactions("transactions.csv", sep = ",", format = "single", cols = c(1,2) )
+```
+
+```{r}
+summary(trans)
+```
+
+```{r}
+#Vector of transation sizes
+arules::size(head(trans))
+```
+
+```{r}
+#View first few rows of data in list format
+arules::LIST(head(trans))
+```
+
+
+###Assotion Rule Mining
+
+#####Support
+
++ The proportion of the times an item set occurs in the dataset
+
+
++ Vary until you get a response with a small set of rules
+
+#####Confidence
+
++ Probability that a rule is correct
+
+#####Lift
+
++ The ratio by which the confidence of a rule exceeds the
+expected confidence
+
++ + 1 indicates items are independent and there is no relationship
+
++ + Look for lift > 1
+
+
+####Identify Frequent Item Sets
+```{r}
+frequentItems <- arules:: eclat(trans, parameter = list(supp = 0.08, maxlen = 5))
+
+arules::inspect(head(trans))
+
+```
+
+```{r}
+itemFrequencyPlot(trans, topN = 10, type = "absolute", main = "Item Frequency")
+```
+
+
+#####Apriori Algorithm: Identify Rules
+```{r}
+rules <- apriori(trans, parameter = list(supp = 0.06, conf = .7, maxlen = 3))
+```
+
+```{r}
+rules_conf <- sort(rules, by = "confidence", decreasing = TRUE)
+
+inspect(head(rules_conf))
+```
+
+
+
+
