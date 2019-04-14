@@ -60,75 +60,54 @@ n <- as.data.frame(scale(data, center = mins, scale = maxs - mins))
 ```{r}
 set.seed(2)
 
-##########  2 Hidden Layers
-net.2 <- neuralnet(price ~ miles+saleCode+modelCode,
-                 data= n, hidden= 2,
-                 linear.output = TRUE)
-### Predicting with Neural Net
-pr.net.2 <- compute(net.2,              # object to use for predicting
-                  n[,c(2, 4:5)],    # covariates
-                  rep = 1)          # repetitions
-plot(net.2)
+########## Creating Loop for RMSE of 2 - 6 Hidden Layers
+MSE.net <- tibble("Number of Hidden Layers" = integer(),
+                  "RMSE" = integer())
 
-predict.net.2 <- pr.net.2$net.result*(max(data$price)-min(data$price))+
-  min(data$price) # reverse the scaling done earlier
-MSE.net.2 <- rmse(data$price,predict.net.2) # actual vs. predicted
-
-########## 3 Hidden Layers
-net.3 <- neuralnet(price ~ miles+saleCode+modelCode,
-                   data= n, hidden= 3,
+for (i in 2:9) {
+  net <- neuralnet(price ~ miles+saleCode+modelCode,
+                   data= n, hidden= i,
                    linear.output = TRUE)
-pr.net.3 <- compute(net.3, n[,c(2, 4:5)], rep = 1)
-predict.net.3 <- pr.net.3$net.result*(max(data$price)-min(data$price))+min(data$price)
-MSE.net.3 <- rmse(data$price,predict.net.3)
-
-########## 4 Hidden Layers
-net.4 <- neuralnet(price ~ miles+saleCode+modelCode,
-                   data= n, hidden= 4,
-                   linear.output = TRUE)
-pr.net.4 <- compute(net.4, n[,c(2, 4:5)], rep = 1)
-predict.net.4 <- pr.net.4$net.result*(max(data$price)-min(data$price))+min(data$price)
-MSE.net.4 <- rmse(data$price,predict.net.4)
-
-########## 5 Hidden Layers
-net.5 <- neuralnet(price ~ miles+saleCode+modelCode,
-                   data= n, hidden= 5,
-                   linear.output = TRUE)
-pr.net.5 <- compute(net.5, n[,c(2, 4:5)], rep = 1)
-predict.net.5 <- pr.net.5$net.result*(max(data$price)-min(data$price))+min(data$price)
-MSE.net.5 <- rmse(data$price,predict.net.5)
+  ### Predicting with Neural Net
+  pr.net <- compute(net,              # object to use for predicting
+                    n[,c(2, 4:5)],    # covariates
+                    rep = 1)          # repetitions
+  predict.net <- pr.net$net.result*(max(data$price)-min(data$price))+
+    min(data$price) # reverse the scaling done earlier
+  MSE.net[i,1] <- i
+  MSE.net[i,2] <- rmse(data$price,predict.net) # actual vs. predicted
+}
 ```
 
 ### Model Comparison: Linear Regression vs. Neural Network
 ```{r}
-##### 2 Hidden Layers
-paste('MSEs for linear regression and neural net(2):',
-      round(MSE.lm, 0),
-      '&',
-      round(MSE.net.2,0)) ;paste('Percent difference for nn(2):', round(((MSE.net.2 - MSE.lm)/MSE.lm*100),2),'%')
+MSE.net.best<-MSE.net %>%
+  filter(RMSE == min(MSE.net[2:nrow(MSE.net),2]))
 
-##### 3 Hidden Layers
-paste('MSEs for linear regression and neural net(3):',
+paste('Mean Squared Errors for linear regression and neural net:',
       round(MSE.lm, 0),
       '&',
-      round(MSE.net.3,0)) ; paste('Percent difference for nn(3):', round(((MSE.net.3 - MSE.lm)/MSE.lm*100),2),'%')
-
-##### 4 Hidden Layers
-paste('MSEs for linear regression and neural net(4):',
-      round(MSE.lm, 0),
-      '&',
-      round(MSE.net.4,0)) ; paste('Percent difference for nn(4):', round(((MSE.net.4 - MSE.lm)/MSE.lm*100),2),'%')
-
-##### 5 Hidden Layers
-paste('MSEs for linear regression and neural net(5):',
-      round(MSE.lm, 0),
-      '&',
-      round(MSE.net.5,0)); paste('Percent difference for nn(5):', round(((MSE.net.5 - MSE.lm)/MSE.lm*100),2),'%')
+      round(MSE.net.best[2],0))
+paste('Percent improvement for Neural Net:',
+      round(((MSE.lm - MSE.net.best[2])/MSE.lm*100),2),'%')
 ```
 
 ### Graphing the Model Comparison
 ```{r}
-data <- data %>% mutate(diff = predict.lm - predict.net.4)
+optimumLayers=MSE.net.best[["Number of Hidden Layers"]]
+
+### Generating predictions with optimum number of hidden layers
+net <- neuralnet(price ~ miles+saleCode+modelCode,
+                 data= n, hidden= optimumLayers,
+                 linear.output = TRUE)
+pr.net <- compute(net,              # object to use for predicting
+                  n[,c(2, 4:5)],    # covariates
+                  rep = 1)          # repetitions
+predict.net <- pr.net$net.result*(max(data$price)-min(data$price))+
+  min(data$price)
+
+### Graphical Comparison
+data <- data %>% mutate(diff = predict.lm - predict.net)
 ggplot(data, aes(x=price)) +
   geom_point(aes(y=diff, color='Prediction difference')) +
   geom_point(aes(y=predict.lm, color='Linear model')) +
@@ -138,6 +117,7 @@ ggplot(data, aes(x=price)) +
   ylab('Predicted price') +
   scale_color_discrete(name="Color Legend") +
   ggtitle("Comparison of Linear Regression & Neural Network",
-          subtitle="4 Hidden Layers in Neural Network")
+          subtitle=paste(optimumLayers,
+                         "Hidden Layers in Neural Network"))
 ```
 
